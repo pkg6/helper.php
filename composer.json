@@ -1,0 +1,30 @@
+{
+  "name": "pkg6/helper",
+  "type": "library",
+  "license": "Apache-2.0",
+  "description": "PHP std tool class, helper class: string, array, object, json, env, php and more",
+  "authors": [
+    {
+      "name": "wangzhiqiang",
+      "email": "zhiqiangwang@aliyun.com"
+    }
+  ],
+  "require": {
+    "ext-mbstring": "*",
+    "ext-json": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Pkg6\\Helper\\": "src/"
+    },
+    "files": [
+      "src/function.php"
+    ]
+  },
+  "scripts": {
+    "fresh": [
+      "rm -rf vendor composer.lock",
+      "composer install"
+    ]
+  }
+}
