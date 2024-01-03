@@ -33,8 +33,8 @@ class Str
     /**
      * Returns the portion of string specified by the start and length parameters.
      * This method ensures the string is treated as a byte array by using `mb_substr()`.
-     * @param string   $string the input string. Must be one character or longer.
-     * @param int      $start the starting position
+     * @param string $string the input string. Must be one character or longer.
+     * @param int $start the starting position
      * @param int|null $length the desired portion length. If not specified or `null`, there will be
      * no limit on length i.e. the output will be until the end of the string.
      * @return string the extracted part of string, or FALSE on failure or an empty string.
@@ -68,7 +68,7 @@ class Str
             $path = mb_substr($path, 0, -$len);
         }
         $path = rtrim(str_replace('\\', '/', $path), '/');
-        $pos  = mb_strrpos($path, '/');
+        $pos = mb_strrpos($path, '/');
         if ($pos !== false) {
             return mb_substr($path, $pos + 1);
         }
@@ -85,7 +85,7 @@ class Str
      */
     public static function dirname($path)
     {
-        $normalizedPath    = rtrim(
+        $normalizedPath = rtrim(
             str_replace('\\', '/', $path),
             '/'
         );
@@ -101,7 +101,7 @@ class Str
      * Check if given string starts with specified substring. Binary and multibyte safe.
      * @param string $string Input string
      * @param string $with Part to search inside the $string
-     * @param bool   $caseSensitive Case sensitive search. Default is true. When case sensitive is enabled, `$with` must
+     * @param bool $caseSensitive Case sensitive search. Default is true. When case sensitive is enabled, `$with` must
      * exactly match the starting of the string in order to get a true value.
      * @param string $encoding
      * @return bool Returns true if first input starts with second input, false otherwise
@@ -122,7 +122,7 @@ class Str
      * Check if given string ends with specified substring. Binary and multibyte safe.
      * @param string $string Input string to check
      * @param string $with Part to search inside of the `$string`.
-     * @param bool   $caseSensitive Case sensitive search. Default is true. When case sensitive is enabled, `$with` must
+     * @param bool $caseSensitive Case sensitive search. Default is true. When case sensitive is enabled, `$with` must
      * exactly match the ending of the string in order to get a true value.
      * @param string $encoding
      * @return bool Returns true if first input ends with second input, false otherwise
@@ -148,11 +148,11 @@ class Str
      * Explodes string into array, optionally trims values and skips empty ones.
      * @param string $string String to be exploded.
      * @param string $delimiter Delimiter. Default is ','.
-     * @param mixed  $trim Whether to trim each element. Can be:
+     * @param mixed $trim Whether to trim each element. Can be:
      *   - boolean - to trim normally;
      *   - string - custom characters to trim. Will be passed as a second argument to `trim()` function.
      *   - callable - will be called for each value instead of trim. Takes the only argument - value.
-     * @param bool   $skipEmpty Whether to skip empty strings between delimiters. Default is false.
+     * @param bool $skipEmpty Whether to skip empty strings between delimiters. Default is false.
      * @return array
      */
     public static function explode($string, $delimiter = ',', $trim = true, $skipEmpty = false)
@@ -196,8 +196,8 @@ class Str
      */
     public static function normalizeNumber($value)
     {
-        $value            = (string)$value;
-        $localeInfo       = localeconv();
+        $value = (string)$value;
+        $localeInfo = localeconv();
         $decimalSeparator = isset($localeInfo['decimal_point']) ? $localeInfo['decimal_point'] : null;
         if ($decimalSeparator !== null && $decimalSeparator !== '.') {
             $value = str_replace($decimalSeparator, '.', $value);
@@ -234,7 +234,7 @@ class Str
      * This function emulates [[fnmatch()]], which may be unavailable at certain environment, using PCRE.
      * @param string $pattern the shell wildcard pattern.
      * @param string $string the tested string.
-     * @param array  $options options for matching. Valid options are:
+     * @param array $options options for matching. Valid options are:
      * - caseSensitive: bool, whether pattern should be case sensitive. Defaults to `true`.
      * - escape: bool, whether backslash escaping is enabled. Defaults to `true`.
      * - filePath: bool, whether slashes in string only matches slashes in the given pattern. Defaults to `false`.
@@ -247,14 +247,14 @@ class Str
         }
         $replacements = [
             '\\\\\\\\' => '\\\\',
-            '\\\\\\*'  => '[*]',
-            '\\\\\\?'  => '[?]',
-            '\*'       => '.*',
-            '\?'       => '.',
-            '\[\!'     => '[^',
-            '\['       => '[',
-            '\]'       => ']',
-            '\-'       => '-',
+            '\\\\\\*' => '[*]',
+            '\\\\\\?' => '[?]',
+            '\*' => '.*',
+            '\?' => '.',
+            '\[\!' => '[^',
+            '\[' => '[',
+            '\]' => ']',
+            '\-' => '-',
         ];
         if (isset($options['escape']) && !$options['escape']) {
             unset($replacements['\\\\\\\\']);
@@ -283,7 +283,7 @@ class Str
     public static function mb_ucfirst($string, $encoding = 'UTF-8')
     {
         $firstChar = mb_substr((string)$string, 0, 1, $encoding);
-        $rest      = mb_substr((string)$string, 1, null, $encoding);
+        $rest = mb_substr((string)$string, 1, null, $encoding);
         return mb_strtoupper($firstChar, $encoding) . $rest;
     }
 
@@ -300,7 +300,7 @@ class Str
         if (empty($string)) {
             return $string;
         }
-        $parts       = preg_split('/(\s+\W+\s+|^\W+\s+|\s+)/u', $string, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+        $parts = preg_split('/(\s+\W+\s+|^\W+\s+|\s+)/u', $string, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
         $ucfirstEven = trim(mb_substr($parts[0], -1, 1, $encoding)) === '';
         foreach ($parts as $key => $value) {
             $isEven = (bool)($key % 2);
@@ -309,5 +309,27 @@ class Str
             }
         }
         return implode('', $parts);
+    }
+
+    /**
+     * @param $length
+     * @param $is_numeric
+     * @return string
+     */
+    public static function random($length, $is_numeric = 0)
+    {
+        $seed = base_convert(md5(microtime() . $_SERVER['DOCUMENT_ROOT']), 16, $is_numeric ? 10 : 35);
+        $seed = $is_numeric ? (str_replace('0', '', $seed) . '012340567890') : ($seed . 'zZ' . strtoupper($seed));
+        if ($is_numeric) {
+            $hash = '';
+        } else {
+            $hash = chr(rand(1, 26) + rand(0, 1) * 32 + 64);
+            $length--;
+        }
+        $max = strlen($seed) - 1;
+        for ($i = 0; $i < $length; $i++) {
+            $hash .= $seed[mt_rand(0, $max)];
+        }
+        return $hash;
     }
 }
